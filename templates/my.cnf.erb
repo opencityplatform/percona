@@ -11,7 +11,8 @@ datadir=<%= datadir %>
 <% if osfamily != 'RedHat' %>pid-file=/var/lib/mysql/<%= hostname %>.pid<% end %>
 
 user=mysql
-
+port=<%= mysql_port %>
+ 
 # Path to Galera library
 wsrep_provider=<%= wsrep_provider %>
 
