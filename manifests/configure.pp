@@ -39,9 +39,10 @@ class percona::configure inherits percona {
     file {'/etc/xinetd.d/mysqlchk': ensure => present, }
     
     exec { 'sed mysqlchk':
-      command => "sed -i '/server          =/a \       \ server_args     = clusterchckuser CLUSTERCHECK_PWD' /etc/xinetd.d/mysqlchk",
+      command => "sed -i '/server          =/a \       \ server_args     = clustercheckuser CLUSTERCHECK_PWD' /etc/xinetd.d/mysqlchk",
       path    => [ '/bin', '/usr/bin' ],
-      onlyif  => "grep -q CLUSTERCHECK_PWD /etc/xinetd.d/mysqlchk; if [ $? -ne 0 ]; then (exit 0); else (exit 1); fi"
+      onlyif  => "grep -q CLUSTERCHECK_PWD /etc/xinetd.d/mysqlchk; if [ $? -ne 0 ]; then (exit 0); else (exit 1); fi",
+      notify  => Service['xinetd'],
     }
 
 }

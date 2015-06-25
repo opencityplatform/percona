@@ -9,8 +9,8 @@ class percona::install {
   case $::operatingsystem {
     /(?i:debian|ubuntu)/: {
       $pkg_version = $percona_version
-      $pkg_client_default = "percona-server-client-${pkg_version}"
-      $pkg_server_default = "percona-server-server-${pkg_version}"
+      $pkg_client_default = "percona-xtradb-cluster-client-${pkg_version}"
+      $pkg_server_default = "percona-xtradb-cluster-${pkg_version}"
 
       case $percona_version {
         '5.1': {
@@ -22,8 +22,7 @@ class percona::install {
 
         default: {
           $pkg_common_default = [
-            'percona-toolkit',
-            "percona-server-common-${pkg_version}",
+            'percona-xtradb-cluster-galera-2.x',
           ]
         }
       }
@@ -110,6 +109,14 @@ class percona::install {
       ],
     }
   }
-
+  
+  exec { 'stop_mysql_service':
+    command => "/etc/init.d/${::percona::service_name} stop",
+    path    => [ '/bin', '/usr/bin', '/sbin', '/usr/sbin', ],
+    require => [
+      Package[$pkg_server],
+      Package[$pkg_client],
+      Package[$pkg_common],
+    ],
+  }
 }
-

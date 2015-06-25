@@ -12,7 +12,7 @@ class percona::master inherits percona {
   }
 
   exec { $percona::percona_service:
-    command => 'service mysql start --wsrep-new-cluster',
+    command => '/etc/init.d/mysql bootstrap-pxc',
     path    => [ '/bin', '/usr/bin', '/sbin', '/usr/sbin', ],
     require => [File[$percona::percona_conf],Exec['init percona db'],File[$percona::datadir]],
   }
@@ -30,7 +30,7 @@ class percona::master inherits percona {
     require => Exec[$percona::percona_service],
   } ~>
   exec { 'grant process':
-    command => "mysql -u root -e \"GRANT PROCESS ON *.* TO 'clustercheckuser'@'localhost' IDENTIFIED BY 'CLUSTERCHECK_PWD'; FLUSH PRIVILEGES;\"",
+    command => "mysql -u root -e \"GRANT USAGE ON *.* TO 'clustercheckuser'@'localhost' IDENTIFIED BY 'CLUSTERCHECK_PWD'; FLUSH PRIVILEGES;\"",
     path    => [ '/bin', '/usr/bin' ],
     unless  => "test -f ${percona::datadir}/first/db.opt",
     require => Exec[$percona::percona_service],

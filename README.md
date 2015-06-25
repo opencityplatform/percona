@@ -50,8 +50,9 @@ The following parameters are supported:
 * **innodb_autoinc_lock_mode**: the innodb lock mode [default: 2]
 * **innodb_locks_unsafe_for_binlog**: set this to true if you want to use unsafe locks for the binlogs [default: 1]
 * **innodb_buffer_pool_size**: the innodb buffer pool size [default: 128M]
-* **innodb_log_file_size**: the innodb log file size [default: 256M]
+* **innodb_log_file_size**: the innodb log file size [default: 5242880]
 * **innodb_file_per_table**: set this to true to allow using sepafate files for the innodb tablespace [default: 1]
+* **mysql_port**: the port which the mysql service will run [default: 3306]
 * **master**: set this to true to the first host in the cluster you are installing [default: false]
 
 
@@ -107,10 +108,14 @@ Check the Add tips to xinetd line and click Import.
 
 ###Configure the module with your parameters:
 
-You can change all the parameter you want in all the class. But the mandatory one is:
+You can change all the parameter you want in all the class. But the mandatory ones are:
 
 * In percona module set the mysql_cluster_servers. Theese are the node in mysql percona cluster. For example 192.168.10.20,192.168.10.21,192.168.10.22
+* In percona module set the mysql_port. The defalut is 3306. If you install the percona cluster in the same hosts of ha-proxy hosts, we suggest to change this port to 3307 or other free port in the host.
 
+**Not mandatory but to check:**
+
+* If you are instlling a node to an exixting mysql percona cluster check the innodb log file size and set properly the variable innodb_log_file_size in percona module.
 
 ###Assign to each host in the cluster the modules
 
